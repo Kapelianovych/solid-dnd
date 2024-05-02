@@ -13,7 +13,7 @@ import {
 import { Layout, noopTransform, Transform, transformsAreEqual } from "./layout";
 import { transformStyle } from "./style";
 
-interface Sortable {
+export interface Sortable {
   (element: HTMLElement): void;
   ref: RefSetter<HTMLElement | null>;
   get transform(): Transform;
@@ -47,8 +47,19 @@ const createSortable = (id: Id, data: Record<string, any> = {}): Sortable => {
       );
 
       if (currentLayout && targetLayout) {
-        delta.x = targetLayout.x - currentLayout.x;
-        delta.y = targetLayout.y - currentLayout.y;
+        const movingDownOrRight = resolvedInitialIndex < resolvedCurrentIndex;
+
+        delta.x = movingDownOrRight
+          ? targetLayout.width +
+            // horizontal gap
+            (targetLayout.x - (currentLayout.x + currentLayout.width))
+          : targetLayout.x - currentLayout.x;
+
+        delta.y = movingDownOrRight
+          ? targetLayout.height +
+            // vertical gap
+            (targetLayout.y - (currentLayout.y + currentLayout.height))
+          : targetLayout.y - currentLayout.y;
       }
     }
 

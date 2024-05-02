@@ -18,3 +18,4 @@ export type {
   Transformer,
 } from "./drag-drop-context";
 export type { CollisionDetector } from "./collision";
+export type { Sortable } from "./create-sortable";
